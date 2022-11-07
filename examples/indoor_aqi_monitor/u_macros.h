@@ -2,15 +2,15 @@
 #define U_MACROS_H
 
 #define MQTT_CLIENT_NAME    "NodeMCUv2"
-#define TOKEN               "BBFF-wVdGoyx0wgM2LbvIbwhH6Bzo9lnfg6"
+#define TOKEN               "Ubidots Token here"
 
 
-#define MQ135_TOPIC         ""
+#define MQ135_TOPIC         "Enter a Ubidots topic if you want to Subscribe to it "
 #define HOME_AUTO_LABEL     "home-automation"
 #define AQI_LABEL           "aqi"
 
 #define FIRMWARE_VERSION  "v10"
-#define OTA_URL           "http://192.168.11.92:3000/updater"
+#define OTA_URL           "HTTP Server URL hosting the updates"
 
 
 
