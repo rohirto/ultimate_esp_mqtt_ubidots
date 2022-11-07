@@ -31,8 +31,7 @@ Library Capable of:
   esp_updater OTA_update;
   void setup(){
   OTA_update.start_wifi_manager();
-  WiFiClient client;
-  OTA_update.start_http_update(client,OTA_URL,FIRMWARE_VERSION);
+  OTA_update.start_http_update(OTA_URL,FIRMWARE_VERSION);
   }
   ```
 3. Ubidots MQTT: In MQTT subscribe func, last argument should always be NULL, there should always be stub function mqtt_user_code(char* payload)
@@ -47,14 +46,16 @@ Library Capable of:
   void setup(){
   //Start MQTT connection
   esp_ubidots.init();
-  esp_ubidots.mqtt_subscribe(MQTT_TOPIC, NULL);  //Can dynamically enter the arguments, must be terminated with NULL
+  esp_ubidots.mqtt_subscribe(MQTT_TOPIC1, MQTT_TOPIC2, NULL);  //Can dynamically enter the arguments, must be terminated with NULL
   }
   void loop(){
   esp_ubidots.mqtt_loop();
+  esp_ubidots.mqtt_subscribe(MQTT_TOPIC1, MQTT_TOPIC2, NULL);  //need to keep resubscribing in case of disconnection
   }
   
   void mqtt_user_code(char* m_topic, char* payload, int len){
   //Stub Function must be there
+  //The IO changes which needs to change on message reception from MQTT server
   }
   ```
 4. User defined Timers:
