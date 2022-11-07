@@ -181,6 +181,8 @@ void esp_mqtt::reconnect() {
       Serial.println(this->ubidots_token);
       if (client.connect(this->client_name, this->ubidots_token,"")) {
         Serial.println("connected");
+
+        //Ideally should re - subscribe here 
       } else {
         Serial.print("failed, rc=");
         Serial.print(client.state());
