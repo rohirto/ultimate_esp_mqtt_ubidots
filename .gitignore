@@ -1,4 +1,4 @@
 # git ignore for ultimate esp mqtt ubidots 
 
 # ignore .vscode files
-examples/.vscode/
+examples/indoor_aqi_monitor/.vscode/
