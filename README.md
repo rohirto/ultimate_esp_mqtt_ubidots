@@ -35,7 +35,7 @@ Library Capable of:
   OTA_update.start_http_update(client,OTA_URL,FIRMWARE_VERSION);
   }
   ```
-3. Ubidots MQTT:
+3. Ubidots MQTT: In MQTT subscribe func, last argument should always be NULL, there should always be stub function mqtt_user_code(char* payload)
   ```
   #define MQTT_CLIENT_NAME    "NodeMCUv2"
   #define TOKEN               "Ubidots Token"
@@ -43,14 +43,18 @@ Library Capable of:
   #define DEVICE_LABEL        "given by ubidots, used for publishing"
   #define VARIABLE_LABEL      "given by ubidots, used for publishing"
   
-  
+  esp_mqtt esp_ubidots(MQTT_CLIENT_NAME, TOKEN, DEBUG_FALSE);  
   void setup(){
   //Start MQTT connection
   esp_ubidots.init();
-  esp_ubidots.mqtt_subscribe(MQTT_TOPIC);
+  esp_ubidots.mqtt_subscribe(MQTT_TOPIC, NULL);  //Can dynamically enter the arguments, must be terminated with NULL
   }
   void loop(){
   esp_ubidots.mqtt_loop();
+  }
+  
+  void mqtt_user_code(char* m_topic, char* payload, int len){
+  //Stub Function must be there
   }
   ```
 4. User defined Timers:
