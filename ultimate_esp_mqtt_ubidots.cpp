@@ -323,9 +323,9 @@ void esp_timer::timer_loop()
   {
     startMillis = currentMillis;
     this->timer_elapsed = true;
-    Serial.print(this->timer_name);
-    Serial.print(" ");
-    Serial.println("Timer elapsed");
+    // Serial.print(this->timer_name);
+    // Serial.print(" ");
+    // Serial.println("Timer elapsed");
   }
 }
 
