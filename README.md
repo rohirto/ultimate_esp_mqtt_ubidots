@@ -8,6 +8,7 @@ Library Capable of:
 1. WiFi Manager: Auto choose WiFi AP dynamically 
 2. HTTP OTA: Web server based OTA (External NodeJS Server -> https://github.com/rohirto/OTA_Server)
 3. Ubidots MQTT 
+4. Wifi Reconnect timer and User Timers: A wifi reconnect timer of 3 mins (If wifi connection goes, either AP is turned off or Internet gone, the esp tries to reconnect with Ubidots server for 3 mins, after that if WiFi Status is of disconnected then esp goes back to WiFi manager mode to reconfigure a new AP -> which if not done in 3 mins will result in attempt for connection with existing AP -> the cycle goes on)
 
 ## Usage 
 1. WiFi Manager Module: 
@@ -38,10 +39,15 @@ Library Capable of:
   ```
   #define MQTT_CLIENT_NAME    "NodeMCUv2"
   #define TOKEN               "Ubidots Token"
+  #define MQTT_TOPIC          "MQTT Topic to subscribe"
+  #define DEVICE_LABEL        "given by ubidots, used for publishing"
+  #define VARIABLE_LABEL      "given by ubidots, used for publishing"
+  
   
   void setup(){
   //Start MQTT connection
   esp_ubidots.init();
+  esp_ubidots.mqtt_subscribe(MQTT_TOPIC);
   }
   void loop(){
   esp_ubidots.mqtt_loop();
