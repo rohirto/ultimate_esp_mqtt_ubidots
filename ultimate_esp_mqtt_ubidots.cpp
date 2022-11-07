@@ -100,19 +100,22 @@ void updater(WiFiClient client, String version, String url)
   }
 }
 
-esp_mqtt::esp_mqtt(char *clientName, char *ubidotsToken)
+esp_mqtt::esp_mqtt(char *clientName, char *ubidotsToken, bool u_debug)
 {
   this->client_name = clientName;
   this->ubidots_token = ubidotsToken;
   this->server_name = MQTT_SERVER;
+  this->debug = u_debug;
 }
 
 void esp_mqtt::init()
 {
   client.setServer(server_name, 1883);
-  Serial.println("MQTT Server Set");
+  if(this->debug == true)
+    Serial.println("MQTT Server Set");
   client.setCallback(callback);
-  Serial.println("Callback Set");
+  if(this->debug == true)
+    Serial.println("Callback Set");
   connected = false;
   resubscribe = true;
   if (boot_flag == false)
@@ -146,9 +149,10 @@ void esp_mqtt::mqtt_loop()
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
+  
+    // Serial.print("Message arrived [");
+    // Serial.print(topic);
+    // Serial.print("] ");
   char temp_buff[10];
   for (int i = 0; i < 10; i++)
   {
@@ -157,16 +161,20 @@ void callback(char *topic, byte *payload, unsigned int length)
   for (int i = 0; i < length; i++)
   {
     temp_buff[i] = (char)payload[i];
-    Serial.print((char)payload[i]);
+    //Serial.print((char)payload[i]);
   }
-  Serial.println();
+  //Serial.println();
+
+  // Can use a stub function beyond this to include User code for controlling
+  mqtt_user_code(topic,(char*)payload, length);
 }
 void esp_mqtt::reconnect()
 {
   if (WiFi.status() != WL_CONNECTED && wifi_reconnect_timer.timer_elapsed == true)
   {
     // Wifi is not connected
-    Serial.println("Reconnecting to WiFi...");
+    if(this->debug == true)
+      Serial.println("Reconnecting to WiFi...");
     // WiFi.disconnect();
     // WiFi.reconnect();
     setup(); // Go back to Setup
@@ -178,15 +186,20 @@ void esp_mqtt::reconnect()
     //  Loop until we're reconnected
     if (!client.connected())
     {
-      Serial.println("Attempting MQTT connection...");
+      if(this->debug == true)
+        Serial.println("Attempting MQTT connection...");
 
       // Attempt to connect
-      Serial.print("Attempting to connect to:");
-      Serial.println(this->client_name);
-      Serial.println(this->ubidots_token);
+      if(this->debug == true)
+      {
+        Serial.print("Attempting to connect to:");
+        Serial.println(this->client_name);
+        Serial.println(this->ubidots_token);
+      }
       if (client.connect(this->client_name, this->ubidots_token, ""))
       {
-        Serial.println("connected");
+        if(this->debug == true)
+          Serial.println("connected");
 
         // Ideally should re - subscribe here
         connected = true;
@@ -194,9 +207,12 @@ void esp_mqtt::reconnect()
       else
       {
         connected = false;
-        Serial.print("failed, rc=");
-        Serial.print(client.state());
-        Serial.println(" try again in 2 seconds");
+        if(this->debug == true)
+        {
+          Serial.print("failed, rc=");
+          Serial.print(client.state());
+          Serial.println(" try again in 2 seconds");
+        }
         // Wait 2 seconds before retrying
         delay(2000);
       }
@@ -216,12 +232,13 @@ void esp_mqtt::mqtt_subscribe(const char *szTypes, ...)
     while (szTypes)
     {
       sprintf(topic, "%s", szTypes);
-      szTypes = va_arg(vl, const char *);
       if (szTypes != NULL)
       {
         client.subscribe(topic);
         delay(1000);
       }
+      szTypes = va_arg(vl, const char *);
+      
     }
 
     va_end(vl);
@@ -287,9 +304,9 @@ void esp_timer::timer_loop()
   {
     startMillis = currentMillis;
     this->timer_elapsed = true;
-    Serial.print(this->timer_name);
-    Serial.print(" ");
-    Serial.println("Timer elapsed");
+    // Serial.print(this->timer_name);
+    // Serial.print(" ");
+    // Serial.println("Timer elapsed");
   }
 }
 

@@ -22,6 +22,7 @@ void update_finished();
 void update_progress(int, int);
 void update_error(int);
 void updater(WiFiClient, String, String);
+void mqtt_user_code(char*, char*, int);
 
 // MQTT func proto
 void callback(char *, byte *, unsigned int); // MQTT callback func
@@ -43,7 +44,7 @@ private:
     char topic[150];
 
 public:
-    esp_mqtt(char *client_name, char *ubidots_token);
+    esp_mqtt(char *, char *, bool);
     void init();
 
     void reconnect(void); // reconnect to MQTT
@@ -52,6 +53,7 @@ public:
     void publish_data(char*, char*, char*);
     bool connected;
     bool resubscribe;
+    bool debug;
 };
 class esp_timer
 {
