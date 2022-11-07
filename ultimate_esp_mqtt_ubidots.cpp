@@ -7,6 +7,11 @@ WiFiClient ubidots;
 PubSubClient client(ubidots);
 bool wifi_elapsed = false;
 esp_timer wifi_reconnect_timer(3, 'm', "wifi"); // Timer of 3 min
+esp_timer ntp_update_timer(1,'m',"NTP_timer");
+//NTP Stuff
+esp_ntp ntpC;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", ntpC.utcOffsetInSeconds);
 
 void update_started()
 {
@@ -54,12 +59,14 @@ void esp_updater::start_wifi_manager()
   Serial.println(WiFi.localIP());
 }
 
-void esp_updater::start_http_update(WiFiClient client, String url, String version)
+void esp_updater::start_http_update(String url, String version)
 {
-  updater(client, version, url);
+ 
+  updater( version, url);
 }
 
-void updater(WiFiClient client, String version, String url)
+
+void updater(String version, String url)
 {
   if ((WiFi.status() == WL_CONNECTED))
   {
@@ -78,7 +85,8 @@ void updater(WiFiClient client, String version, String url)
 
     Serial.println(F("Update start now!"));
     // t_httpUpdate_return ret = ESPhttpUpdate.update("http://server/file.bin");
-    t_httpUpdate_return ret = ESPhttpUpdate.update(client, url, version);
+     WiFiClient up_client;
+    t_httpUpdate_return ret = ESPhttpUpdate.update(up_client, url, version);
 
     switch (ret)
     {
@@ -122,6 +130,7 @@ void esp_mqtt::init()
   {
     // Ideally should start timer here
     // wifi_reconnect_timer.start();
+    timeClient.begin();
   }
   // First boot
   if (boot_flag == false)
@@ -133,10 +142,13 @@ void esp_mqtt::init()
 void esp_mqtt::mqtt_loop()
 {
   wifi_reconnect_timer.timer_loop();
-  if (WiFi.status() == WL_CONNECTED)
+  
+  if (WiFi.status() == WL_CONNECTED && wifi_reconnect_timer.timer_elapsed == true)
   {
     // Clear wifi reconnect timer
     wifi_reconnect_timer.timer_elapsed = false;
+    //Test
+    ntpC.get_time_date();
   }
   connected = client.connected();
   if (!connected)
@@ -145,6 +157,13 @@ void esp_mqtt::mqtt_loop()
     this->reconnect();
   }
   client.loop();
+
+  ntp_update_timer.timer_loop();
+  if(ntp_update_timer.timer_elapsed == true)
+  {
+    ntp_update_timer.timer_elapsed = false;
+    timeClient.update();
+  }
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -304,13 +323,30 @@ void esp_timer::timer_loop()
   {
     startMillis = currentMillis;
     this->timer_elapsed = true;
-    // Serial.print(this->timer_name);
-    // Serial.print(" ");
-    // Serial.println("Timer elapsed");
+    Serial.print(this->timer_name);
+    Serial.print(" ");
+    Serial.println("Timer elapsed");
   }
 }
 
 void esp_timer::start()
 {
   this->startMillis = millis();
+}
+
+esp_ntp::esp_ntp(){
+}
+
+
+void esp_ntp::get_time_date(){
+  current_hr = timeClient.getHours();
+  current_min = timeClient.getMinutes();
+  Serial.print("Getting Time: ");
+  Serial.print(daysOfTheWeek[timeClient.getDay()]);
+  Serial.print(", ");
+  Serial.print(timeClient.getHours());
+  Serial.print(":");
+  Serial.print(timeClient.getMinutes());
+  Serial.print(":");
+  Serial.println(timeClient.getSeconds());
 }

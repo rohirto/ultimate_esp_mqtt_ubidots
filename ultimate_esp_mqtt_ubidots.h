@@ -13,15 +13,28 @@
 #include <WebSocketsClient.h>
 #include <DNSServer.h>
 #include <PubSubClient.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 #define MQTT_SERVER         "industrial.api.ubidots.com"
+
+//GPIOS def for Generic ESP8266
+#define GPIO_5                      5
+#define GPIO_4                      4
+#define GPIO_0                      0
+#define GPIO_2                      2
+#define GPIO_15                     15
+#define GPIO_16                     16
+#define GPIO_14                     14
+#define GPIO_12                     12
+#define GPIO_13                     13
 
 // Func Prototypes
 void update_started();
 void update_finished();
 void update_progress(int, int);
 void update_error(int);
-void updater(WiFiClient, String, String);
+void updater(String, String);
 void mqtt_user_code(char*, char*, int);
 
 // MQTT func proto
@@ -32,7 +45,8 @@ class esp_updater
 private:
 public:
     void start_wifi_manager();
-    void start_http_update(WiFiClient, String, String);
+    void wifi_manager_reset();
+    void start_http_update(String, String);
 };
 class esp_mqtt
 {
@@ -69,5 +83,20 @@ public:
     void timer_loop(void);
     void init(uint32_t);
     void start();
+};
+
+class esp_ntp
+{
+    private:
+        char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        
+        
+    public:
+        esp_ntp();
+        volatile int current_hr;
+        volatile int current_min;
+        void get_time_date(void);
+        const long utcOffsetInSeconds = 19800;  //IST time offset
+
 };
 #endif

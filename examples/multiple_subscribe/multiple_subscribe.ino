@@ -16,8 +16,7 @@ void setup()
     // Check Update
     Serial.println("Checking For Firmware Update....");
 
-    WiFiClient client;
-    OTA_update.start_http_update(client, OTA_URL, FIRMWARE_VERSION);
+    OTA_update.start_http_update(OTA_URL, FIRMWARE_VERSION);
 
     // Start MQTT connection
     esp_ubidots.init();

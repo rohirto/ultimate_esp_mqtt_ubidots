@@ -3,3 +3,6 @@
 # ignore .vscode files
 examples/indoor_aqi_monitor/.vscode/
 .vscode/
+examples/indoor_aqi_monitor/build/
+examples/multiple_subscribe/build/
+build/
