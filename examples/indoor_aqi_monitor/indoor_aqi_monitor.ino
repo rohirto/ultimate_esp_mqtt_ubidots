@@ -29,6 +29,8 @@ void setup()
 
   //Start MQTT connection
   esp_ubidots.init();
+  //If Mqtt subscribe, then subscribe 
+  //esp_ubidots.mqtt_subscribe(MQ135_TOPIC); //Can enter Multiple topics 
 
   //Start mq135 timer
   mq135_timer.start();
@@ -39,6 +41,7 @@ void loop()
 {
     char temp_buff1[20];
     esp_ubidots.mqtt_loop();
+    //esp_ubidots.mqtt_subscribe(MQ135_TOPIC); //Can enter Multiple topics 
     mq135_timer.timer_loop();
 
 

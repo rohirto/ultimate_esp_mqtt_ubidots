@@ -2,6 +2,7 @@
 #define ULTIMATE_ESP_MQTT_UBIDOTS_H
 #include <Arduino.h>
 #include <string.h>
+#include <stdarg.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
@@ -47,8 +48,10 @@ public:
 
     void reconnect(void); // reconnect to MQTT
     void mqtt_loop(void);
-    void mqtt_subscribe(char*);
+    void mqtt_subscribe(const char*,...);
     void publish_data(char*, char*, char*);
+    bool connected;
+    bool resubscribe;
 };
 class esp_timer
 {
