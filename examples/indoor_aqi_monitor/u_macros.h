@@ -9,10 +9,11 @@
 #define HOME_AUTO_LABEL     "home-automation"
 #define AQI_LABEL           "aqi"
 
-#define FIRMWARE_VERSION  "v10"
+#define FIRMWARE_VERSION  "v10"               //Change when new revision comes out
 #define OTA_URL           "HTTP Server URL hosting the updates"
 
-
+#define DEBUG_TRUE          true
+#define DEBUG_FALSE         false
 
 
 #endif

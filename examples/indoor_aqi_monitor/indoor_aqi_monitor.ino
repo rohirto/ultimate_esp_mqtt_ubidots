@@ -1,10 +1,9 @@
-
-#include <ultimate_esp_mqtt_ubidots.h>
+#include <Ultimate_ESP_MQTT_Ubidots.h>
 #include "u_macros.h"
 #include"MQ135.h"
 
 esp_updater OTA_update;
-esp_mqtt esp_ubidots(MQTT_CLIENT_NAME,TOKEN);
+esp_mqtt esp_ubidots(MQTT_CLIENT_NAME,TOKEN,DEBUG_FALSE);
 esp_timer mq135_timer(5,'m',"mq135");
 
 
@@ -25,7 +24,7 @@ void setup()
   Serial.println("Checking For Firmware Update....");
 
   WiFiClient client;
-  OTA_update.start_http_update(client,OTA_URL,FIRMWARE_VERSION);
+  OTA_update.start_http_update(OTA_URL,FIRMWARE_VERSION);
 
   //Start MQTT connection
   esp_ubidots.init();
@@ -70,4 +69,10 @@ void MQ135_loop()
     Serial.print(air_quality);
     Serial.println("  PPM");   
     Serial.println();
+}
+
+
+void mqtt_user_code(char* m_topic, char* payload, int len){
+//Stub Function must be there
+//The IO changes which needs to change on message reception from MQTT server
 }
