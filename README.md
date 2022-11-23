@@ -53,7 +53,7 @@ Library Capable of:
   esp_ubidots.mqtt_subscribe(MQTT_TOPIC1, MQTT_TOPIC2, NULL);  //need to keep resubscribing in case of disconnection
   }
   
-  void mqtt_user_code(char* m_topic, char* payload, int len){
+  void mqtt_user_code(char* m_topic, byte* payload, int len){
   //Stub Function must be there
   //The IO changes which needs to change on message reception from MQTT server
   }
