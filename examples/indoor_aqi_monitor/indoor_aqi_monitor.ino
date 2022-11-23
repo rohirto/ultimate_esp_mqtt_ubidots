@@ -72,7 +72,7 @@ void MQ135_loop()
 }
 
 
-void mqtt_user_code(char* m_topic, char* payload, int len){
+void mqtt_user_code(char* m_topic, byte* payload, int len){
 //Stub Function must be there
 //The IO changes which needs to change on message reception from MQTT server
 }

@@ -30,20 +30,24 @@ void loop()
     esp_ubidots.mqtt_subscribe(POND_TEMPERATURE_TOPIC,HUMIDITY_TOPIC,TEMPERATURE_TOPIC, NULL); //Can enter Multiple topics, must be terminated with NULL
 }
 
-void mqtt_user_code(char* mq_topic, char* payload, int len)
+void mqtt_user_code(char* mq_topic, byte* payload, int len)
 {
-    //Stub function if user dont need to act on Subscribed data 
+    // Stub function if user dont need to act on Subscribed data
 
-    //Payload analyzed to take action
-    if(esp_ubidots.debug == DEBUG_TRUE)
+    char temp_buff[10];
+    for (int i = 0; i < 10; i++)
     {
-        Serial.print("Message arrived [");
-        Serial.print(mq_topic);
-        Serial.print("] ");
-
-        Serial.println(payload);
+        temp_buff[i] = '\0';
     }
-    float f_value = atof(payload);
+    for (int i = 0; i < len; i++)
+    {
+        temp_buff[i] = (char)payload[i];
+        if(esp_ubidots.debug == true)
+            Serial.print((char)payload[i]);
+    }
+    if(esp_ubidots.debug == true)
+        Serial.println();
+    float f_value = atof(temp_buff);
     if(strcmp(mq_topic,POND_TEMPERATURE_TOPIC) == 0)
     {
         //If Pond temperature topic is received 

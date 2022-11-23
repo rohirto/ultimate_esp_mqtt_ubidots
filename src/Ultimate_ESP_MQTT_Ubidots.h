@@ -35,7 +35,7 @@ void update_finished();
 void update_progress(int, int);
 void update_error(int);
 void updater(String, String);
-void mqtt_user_code(char*, char*, int);
+void mqtt_user_code(char*, byte*, int);
 
 // MQTT func proto
 void callback(char *, byte *, unsigned int); // MQTT callback func

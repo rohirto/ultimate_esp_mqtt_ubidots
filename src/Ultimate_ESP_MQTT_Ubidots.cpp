@@ -166,26 +166,9 @@ void esp_mqtt::mqtt_loop()
   }
 }
 
-void callback(char *topic, byte *payload, unsigned int length)
+void callback(char *topic_t, byte *payload_t, unsigned int length_t)
 {
-  
-    // Serial.print("Message arrived [");
-    // Serial.print(topic);
-    // Serial.print("] ");
-  char temp_buff[10];
-  for (int i = 0; i < 10; i++)
-  {
-    temp_buff[i] = '\0';
-  }
-  for (int i = 0; i < length; i++)
-  {
-    temp_buff[i] = (char)payload[i];
-    //Serial.print((char)payload[i]);
-  }
-  //Serial.println();
-
-  // Can use a stub function beyond this to include User code for controlling
-  mqtt_user_code(topic,(char*)payload, length);
+  mqtt_user_code(topic_t,payload_t, length_t);
 }
 void esp_mqtt::reconnect()
 {
