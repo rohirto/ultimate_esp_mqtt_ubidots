@@ -108,7 +108,7 @@ void updater(String version, String url)
   }
 }
 
-esp_mqtt::esp_mqtt(char *clientName, char *ubidotsToken, bool u_debug)
+esp_mqtt::esp_mqtt(const char *clientName,const char *ubidotsToken, bool u_debug)
 {
   this->client_name = clientName;
   this->ubidots_token = ubidotsToken;
@@ -264,7 +264,7 @@ void esp_mqtt::publish_data(char *device_label, char *variable_label, char *payl
   delay(1000);
 }
 
-esp_timer::esp_timer(byte timer_interval, char unit, char *name)
+esp_timer::esp_timer(byte timer_interval, const char unit, const char *name)
 {
   uint32_t t_interval;
   this->timer_name = name;

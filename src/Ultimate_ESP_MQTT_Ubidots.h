@@ -51,14 +51,14 @@ public:
 class esp_mqtt
 {
 private:
-    char *client_name;
-    char *ubidots_token;
-    char* server_name;
+    const char *client_name;
+    const char *ubidots_token;
+    const char* server_name;
     char payload[700];
     char topic[150];
 
 public:
-    esp_mqtt(char *, char *, bool);
+    esp_mqtt(const char *,const char *, bool);
     void init();
 
     void reconnect(void); // reconnect to MQTT
@@ -72,13 +72,13 @@ public:
 class esp_timer
 {
 private:
-    char* timer_name;
+    const char* timer_name;
     unsigned long startMillis; // Some global vaiable anywhere in program
     unsigned long currentMillis;
     volatile uint32_t timer_interval;
 
 public:
-    esp_timer(byte timer_interval, char , char*);
+    esp_timer(byte timer_interval,const char , const char*);
     volatile bool timer_elapsed;
     void timer_loop(void);
     void init(uint32_t);
@@ -88,7 +88,7 @@ public:
 class esp_ntp
 {
     private:
-        char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        const char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         
         
     public:
